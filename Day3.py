@@ -35,3 +35,18 @@ def cart_total(cart, discount=0.1):
 
 print(cart_total(cart), "VND")
     
+# 03. Gợi ý sản phẩm liên quan [LIST]
+
+products = [
+{"id": 1, "name": "Áo polo", "category": "ao", "rating": 4.5},
+{"id": 2, "name": "Áo thun", "category": "ao", "rating": 4.8},
+{"id": 3, "name": "Áo khoác", "category": "ao", "rating": 4.2},
+{"id": 4, "name": "Quần jeans","category": "quan","rating": 4.7},
+{"id": 5, "name": "Áo sơ mi", "category": "ao", "rating": 4.6},
+]
+
+def related_products(product_id = 1, products=products, limit = 3):
+    sort_pro = []
+    for pro in products:
+        if pro["id"] == 1 and pro["category"] == "ao" and :
+            
