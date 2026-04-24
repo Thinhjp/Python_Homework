@@ -17,23 +17,23 @@
 
 # 02. Tính tổng giá trị giỏ hàng [LIST]
 
-cart = [
-{"name": "Áo thun", "price": 120000, "quantity": 2},
-{"name": "Quần dài", "price": 350000, "quantity": 1},
-{"name": "Tất", "price": 25000, "quantity": 3},
-]
+# cart = [
+# {"name": "Áo thun", "price": 120000, "quantity": 2},
+# {"name": "Quần dài", "price": 350000, "quantity": 1},
+# {"name": "Tất", "price": 25000, "quantity": 3},
+# ]
 
-def cart_total(cart, discount=0.1):
-    customer = []
-    final_total = 0
-    for pro in cart:
-        cus = list(pro.values())
-        total = int (pro["price"] * pro["quantity"] * 0.9)
-        final_total += total
-        customer.append(cus)
-    return f"{customer} final price is: {final_total}"
+# def cart_total(cart, discount=0.1):
+#     customer = []
+#     final_total = 0
+#     for pro in cart:
+#         cus = list(pro.values())
+#         total = int (pro["price"] * pro["quantity"] * 0.9)
+#         final_total += total
+#         customer.append(cus)
+#     return f"{customer} final price is: {final_total}"
 
-print(cart_total(cart), "VND")
+# print(cart_total(cart), "VND")
     
 # 03. Gợi ý sản phẩm liên quan [LIST]
 
@@ -45,8 +45,25 @@ products = [
 {"id": 5, "name": "Áo sơ mi", "category": "ao", "rating": 4.6},
 ]
 
-def related_products(product_id = 1, products=products, limit = 3):
-    sort_pro = []
+def related_products(product_id, products, limit):
+    # tạo vòng lặp để lấy category từ id được truyền vào. VD: truyền id = 1 thì lấy "ao"
+    get_category = None
     for pro in products:
-        if pro["id"] == 1 and pro["category"] == "ao" and :
+        if pro["id"] == product_id:
+            get_category = pro["category"]
+            break
+    if get_category == None: #nếu key truyền vào không xuất hiện thì end sớm về chuỗi rỗng
+        return []
+    # Gom các sản phẩm chung category nhưng khác id, để không bị lặp sản phẩm hiện tại đang input vào.
+    filtered_list = []
+    for pro in products:
+        if pro["category"] == get_category and pro["id"] != product_id:
+            filtered_list.append(pro)
+    def rate(item):
+        return item["rating"]
+    sorted_list = sorted(filtered_list, key = rate, reverse=True)
+    return sorted_list[:limit]
+
+test = related_products(product_id=1, products=products, limit=3)
+print(test)
             
