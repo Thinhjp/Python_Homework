@@ -67,3 +67,29 @@ def related_products(product_id, products, limit):
 test = related_products(product_id=1, products=products, limit=3)
 print(test)
             
+#04. Phát hiện đơn hàng bất thường [LIST]
+orders = [
+{"id": 101, "total": 250000},
+{"id": 102, "total": 180000},
+{"id": 103, "total": 920000},
+{"id": 104, "total": 210000},
+{"id": 105, "total": 195000},
+]
+def detect_anomalies(orders, threshold=2.5):
+    if orders == None:
+        return[]
+    for order in orders:
+        total = sum(order["total"])
+    # Trung bình
+    avg = total / len(orders)
+    #Tạo giới hạn
+    limit = avg * threshold
+    anomalies = []
+    for ord in orders:
+        if ord["total"] > limit:
+            anomalies.append(ord)
+    return anomalies
+print(detect_anomalies(orders))
+
+    
+
