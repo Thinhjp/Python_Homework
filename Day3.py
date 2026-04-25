@@ -68,28 +68,64 @@
 # print(test)
             
 #04. Phát hiện đơn hàng bất thường [LIST]
-orders = [
-{"id": 101, "total": 250000},
-{"id": 102, "total": 180000},
-{"id": 103, "total": 920000},
-{"id": 104, "total": 210000},
-{"id": 105, "total": 195000},
-]
-def detect_anomalies(orders, threshold=2.5):
-    if orders == None:
-        return[]
-    
-    total = sum(order["total"] for order in orders)
-    # Trung bình
-    avg = total / len(orders)
-    #Tạo giới hạn
-    limit = avg * threshold
-    anomalies = []
-    for ord in orders:
-        if ord["total"] > limit:
-            anomalies.append(ord)
-    return anomalies
-print(detect_anomalies(orders))
+# orders = [
+# {"id": 101, "total": 250000},
+# {"id": 102, "total": 180000},
+# {"id": 103, "total": 920000},
+# {"id": 104, "total": 210000},
+# {"id": 105, "total": 195000},
+# ]
+# def detect_anomalies(orders, threshold=2.5):
+#     if orders == None:
+#         return[]
+#     total = 0
+#     for order in orders:
+#         total += order["total"]
+#     # Trung bình
+#     avg = total / len(orders)
+#     #Tạo giới hạn
+#     limit = avg * threshold
+#     anomalies = []
+#     for ord in orders:
+#         if ord["total"] > limit:
+#             anomalies.append(ord)
+#     return anomalies
+# print(detect_anomalies(orders))
 
-    
+# 05. Xếp hạng sản phẩm bán chạy theo tuần [LIST]
+items = [
+{"product_id": 1, "name": "Áo thun", "qty": 5, "price": 120000},
+{"product_id": 2, "name": "Quần jean", "qty": 3, "price": 350000},
+{"product_id": 1, "name": "Áo thun", "qty": 8, "price": 120000},
+{"product_id": 3, "name": "Giày", "qty": 2, "price": 450000},
+{"product_id": 2, "name": "Quần jean", "qty": 4, "price": 350000},
+]
+def get_qty(item):
+    return item["total_qty"] #tạo hàm để lấy số lượng tổng của sản phẩm, để dùng làm key khi sort
+def top_selling(items, top_n): #tạo hàm để lấy top sản phẩm bán chạy, truyền vào list items và số lượng top cần lấy
+    grouped_items = {} #tạo dict để gom các sản phẩm cùng id lại với nhau, tránh bị lặp khi có nhiều đơn hàng cùng sản phẩm
+    for item in items: 
+        product_id = item["product_id"]
+        if product_id not in grouped_items: #nếu id sản phẩm chưa có trong dict thì tạo mới, nếu đã có thì cộng dồn số lượng và doanh thu
+            grouped_items[product_id] = {
+                "name": item["name"],
+                "total_qty": 0,
+                "revenue": 0
+            }
+        grouped_items[product_id]["total_qty"] += item["qty"] #cộng dồn số lượng bán ra của sản phẩm
+        grouped_items[product_id]["revenue"] += item["qty"] * item["price"] #cộng dồn doanh thu của sản phẩm
+    result = [] #tạo list để lưu kết quả 
+    for product_id, data in grouped_items.items(): #tạo vòng lặp từ dữ liệu đã gom
+        formatted_data = { #định dạng lại dữ liệu bao gồm id sản phẩm, tên, tổng số lượng bán ra và doanh thu
+            "product_id": product_id,  
+            "name": data["name"],
+            "total_qty": data["total_qty"],
+            "revenue": data["revenue"]
+        }
+        result.append(formatted_data)
+    result.sort(key=get_qty, reverse=True) #sắp xếp theo key lấy từ hàm def get_qty đã tạo ở trên
+    return result[:top_n] #slice để lấy top n sản phẩm bán chạy nhất
+print(top_selling(items, top_n=2))
+
+
 
