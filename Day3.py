@@ -93,39 +93,123 @@
 # print(detect_anomalies(orders))
 
 # 05. Xếp hạng sản phẩm bán chạy theo tuần [LIST]
-items = [
-{"product_id": 1, "name": "Áo thun", "qty": 5, "price": 120000},
-{"product_id": 2, "name": "Quần jean", "qty": 3, "price": 350000},
-{"product_id": 1, "name": "Áo thun", "qty": 8, "price": 120000},
-{"product_id": 3, "name": "Giày", "qty": 2, "price": 450000},
-{"product_id": 2, "name": "Quần jean", "qty": 4, "price": 350000},
-]
-def get_qty(item):
-    return item["total_qty"] #tạo hàm để lấy số lượng tổng của sản phẩm, để dùng làm key khi sort
-def top_selling(items, top_n): #tạo hàm để lấy top sản phẩm bán chạy, truyền vào list items và số lượng top cần lấy
-    grouped_items = {} #tạo dict để gom các sản phẩm cùng id lại với nhau, tránh bị lặp khi có nhiều đơn hàng cùng sản phẩm
-    for item in items: 
-        product_id = item["product_id"]
-        if product_id not in grouped_items: #nếu id sản phẩm chưa có trong dict thì tạo mới, nếu đã có thì cộng dồn số lượng và doanh thu
-            grouped_items[product_id] = {
-                "name": item["name"],
-                "total_qty": 0,
-                "revenue": 0
-            }
-        grouped_items[product_id]["total_qty"] += item["qty"] #cộng dồn số lượng bán ra của sản phẩm
-        grouped_items[product_id]["revenue"] += item["qty"] * item["price"] #cộng dồn doanh thu của sản phẩm
-    result = [] #tạo list để lưu kết quả 
-    for product_id, data in grouped_items.items(): #tạo vòng lặp từ dữ liệu đã gom
-        formatted_data = { #định dạng lại dữ liệu bao gồm id sản phẩm, tên, tổng số lượng bán ra và doanh thu
-            "product_id": product_id,  
-            "name": data["name"],
-            "total_qty": data["total_qty"],
-            "revenue": data["revenue"]
+# items = [
+# {"product_id": 1, "name": "Áo thun", "qty": 5, "price": 120000},
+# {"product_id": 2, "name": "Quần jean", "qty": 3, "price": 350000},
+# {"product_id": 1, "name": "Áo thun", "qty": 8, "price": 120000},
+# {"product_id": 3, "name": "Giày", "qty": 2, "price": 450000},
+# {"product_id": 2, "name": "Quần jean", "qty": 4, "price": 350000},
+# ]
+# def get_qty(item):
+#     return item["total_qty"] #tạo hàm để lấy số lượng tổng của sản phẩm, để dùng làm key khi sort
+# def top_selling(items, top_n): #tạo hàm để lấy top sản phẩm bán chạy, truyền vào list items và số lượng top cần lấy
+#     grouped_items = {} #tạo dict để gom các sản phẩm cùng id lại với nhau, tránh bị lặp khi có nhiều đơn hàng cùng sản phẩm
+#     for item in items: 
+#         product_id = item["product_id"]
+#         if product_id not in grouped_items: #nếu id sản phẩm chưa có trong dict thì tạo mới, nếu đã có thì cộng dồn số lượng và doanh thu
+#             grouped_items[product_id] = {
+#                 "name": item["name"],
+#                 "total_qty": 0,
+#                 "revenue": 0
+#             }
+#         grouped_items[product_id]["total_qty"] += item["qty"] #cộng dồn số lượng bán ra của sản phẩm
+#         grouped_items[product_id]["revenue"] += item["qty"] * item["price"] #cộng dồn doanh thu của sản phẩm
+#     result = [] #tạo list để lưu kết quả 
+#     for product_id, data in grouped_items.items(): #tạo vòng lặp từ dữ liệu đã gom
+#         formatted_data = { #định dạng lại dữ liệu bao gồm id sản phẩm, tên, tổng số lượng bán ra và doanh thu
+#             "product_id": product_id,  
+#             "name": data["name"],
+#             "total_qty": data["total_qty"],
+#             "revenue": data["revenue"]
+#         }
+#         result.append(formatted_data)
+#     result.sort(key=get_qty, reverse=True) #sắp xếp theo key lấy từ hàm def get_qty đã tạo ở trên
+#     return result[:top_n] #slice để lấy top n sản phẩm bán chạy nhất
+# print(top_selling(items, top_n=2))
+
+
+# # 06. Xây dựng catalog sản phẩm [DICT]
+# products = [
+# {"id": "SP001", "name": "Áo thun basic", "price": 120000,
+# "category": "ao"},
+# {"id": "SP002", "name": "Quần jogger", "price": 280000,
+# "category": "quan"},
+# {"id": "SP003", "name": "Nón bucket", "price": 95000,
+# "category": "phu_kien"},
+# ]
+# def build_catalog(products):
+#     # 1. Khởi tạo một dictionary rỗng để chứa kết quả
+#     catalog = {} 
+    
+#     # 2. Bắt đầu duyệt qua từng sản phẩm trong danh sách
+#     for product in products:
+        
+#         # 3. Lấy ra mã ID của sản phẩm hiện tại để làm Key
+#         product_id = product["id"] 
+        
+#         # 4. Lưu vào dictionary: Gán Key (product_id) = Value (toàn bộ data của product)
+#         catalog[product_id] = product 
+        
+#     # 5. Trả về kết quả cuối cùng Dict lồng
+#     return catalog
+# print(build_catalog(products))
+# #Test ngoài bài 6
+# #Cách lấy dữ liệu bên trong dict lồng
+# catalog = build_catalog(products)
+# print(catalog["SP002"]["price"]) #Lấy price của SP002
+
+# 07. Thống kê đơn hàng theo trạng thái [DICT]
+
+# statuses = ["confirmed", "pending", "shipped", "confirmed", "delivered",
+# "pending", "cancelled", "confirmed", "shipped", "delivered"]
+
+# def count_by_status(statuses):
+#     counts = {}
+#     for status in statuses:
+#         counts[status] = counts.get(status,0) + 1 
+#         #hàm get xét giá trị dict mới counts, counts[status] 
+#         # tạo giá trị mới nếu chưa có hoặc cập nhật value nếu trùng key.
+#     return counts
+# print(count_by_status(statuses))
+
+# 08. Áp dụng mã giảm giá [DICT]
+coupon_db = {
+"SALE20": {"type": "percent", "value": 20, "min_order": 200000},
+"SHIP50K": {"type": "fixed", "value": 50000, "min_order":
+150000},
+"VIP30": {"type": "percent", "value": 30, "min_order": 500000},
+}
+def apply_coupon(cart_total: int, code: str, coupon_db: dict) -> dict:
+    # 1. Early Return: Mã không tồn tại
+    coupon = coupon_db.get(code)
+    if not coupon:
+        return {"valid": False, "message": "Mã không tồn tại"}
+
+    # 2. Early Return: Không đủ điều kiện tối thiểu
+    if cart_total < coupon["min_order"]:
+        return {
+            "valid": False, 
+            "message": f"Đơn hàng tối thiểu để áp dụng mã là {coupon['min_order']}đ"
         }
-        result.append(formatted_data)
-    result.sort(key=get_qty, reverse=True) #sắp xếp theo key lấy từ hàm def get_qty đã tạo ở trên
-    return result[:top_n] #slice để lấy top n sản phẩm bán chạy nhất
-print(top_selling(items, top_n=2))
 
+    # 3. Xử lý Logic cốt lõi
+    discount_amount = 0
+    if coupon["type"] == "percent":
+        discount_amount = int(cart_total * (coupon["value"] / 100))
+    elif coupon["type"] == "fixed":
+        discount_amount = coupon["value"]
 
+    # 4. Bảo vệ an toàn: Không cho phép final_price bị âm
+    # đảm bảo nếu kết quả < 0 thì lấy số 0
+    final_price = cart_total - discount_amount
+    if final_price < 0:
+        final_price = 0
 
+    # 5. Trả về kết quả
+    return {
+        "valid": True,
+        "discount_amount": discount_amount,
+        "final_price": final_price,
+        "message": f"Áp dụng thành công {code} (-{coupon['value']}{'%' if coupon['type'] == 'percent' else 'đ'})"
+    }
+print(apply_coupon(cart_total=350000, code="SHIP50K", coupon_db=coupon_db))
