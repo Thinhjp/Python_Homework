@@ -173,43 +173,144 @@
 # print(count_by_status(statuses))
 
 # 08. Áp dụng mã giảm giá [DICT]
-coupon_db = {
-"SALE20": {"type": "percent", "value": 20, "min_order": 200000},
-"SHIP50K": {"type": "fixed", "value": 50000, "min_order":
-150000},
-"VIP30": {"type": "percent", "value": 30, "min_order": 500000},
-}
-def apply_coupon(cart_total: int, code: str, coupon_db: dict) -> dict:
-    # 1. Early Return: Mã không tồn tại
-    coupon = coupon_db.get(code)
-    if not coupon:
-        return {"valid": False, "message": "Mã không tồn tại"}
+# coupon_db = {
+# "SALE20": {"type": "percent", "value": 20, "min_order": 200000},
+# "SHIP50K": {"type": "fixed", "value": 50000, "min_order":
+# 150000},
+# "VIP30": {"type": "percent", "value": 30, "min_order": 500000},
+# }
+# def apply_coupon(cart_total: int, code: str, coupon_db: dict) -> dict:
+#     # 1. Early Return: Mã không tồn tại
+#     coupon = coupon_db.get(code)
+#     if not coupon:
+#         return {"valid": False, "message": "Mã không tồn tại"}
 
-    # 2. Early Return: Không đủ điều kiện tối thiểu
-    if cart_total < coupon["min_order"]:
-        return {
-            "valid": False, 
-            "message": f"Đơn hàng tối thiểu để áp dụng mã là {coupon['min_order']}đ"
+#     # 2. Early Return: Không đủ điều kiện tối thiểu
+#     if cart_total < coupon["min_order"]:
+#         return {
+#             "valid": False, 
+#             "message": f"Đơn hàng tối thiểu để áp dụng mã là {coupon['min_order']}đ"
+#         }
+
+#     # 3. Xử lý Logic cốt lõi
+#     discount_amount = 0
+#     if coupon["type"] == "percent":
+#         discount_amount = int(cart_total * (coupon["value"] / 100))
+#     elif coupon["type"] == "fixed":
+#         discount_amount = coupon["value"]
+#     # đảm bảo nếu kết quả < 0 thì lấy số 0
+#     final_price = cart_total - discount_amount
+#     if final_price < 0:
+#         final_price = 0
+
+#     # 5. Trả về kết quả
+#     return {
+#         "valid": True,
+#         "discount_amount": discount_amount,
+#         "final_price": final_price,
+#         "message": f"Áp dụng thành công {code} (-{coupon['value']}{'%' if coupon['type'] == 'percent' else 'đ'})"
+#     }
+# print(apply_coupon(cart_total=350000, code="SHIP50K", coupon_db=coupon_db))
+
+# 09. Tổng hợp báo cáo doanh thu theo ngày [DICT]
+# transactions = [
+# {"date": "2024-01-15", "amount": 320000},
+# {"date": "2024-01-15", "amount": 185000},
+# {"date": "2024-01-16", "amount": 450000},
+# {"date": "2024-01-15", "amount": 270000},
+# {"date": "2024-01-16", "amount": 390000},
+# ]
+
+# def daily_report(transactions):
+#     report = {}
+
+#     # Duyệt qua từng giao dịch để gom nhóm
+#     for item in transactions:
+#         date = item["date"]
+#         amount = item["amount"]
+
+#         # Date chưa có trong dict thì tạo mới
+#         if date not in report:
+#             report[date] = {
+#                 "total": 0,
+#                 "count": 0
+#             }
+
+#         # Cộng dồn total và đếm nếu Date trong Dict
+#         report[date]["total"] += amount
+#         report[date]["count"] += 1
+
+#     # BƯỚC 2: Tính toán giá trị trung bình sau khi đã có tổng số
+#     for date in report:
+#         total = report[date]["total"]
+#         count = report[date]["count"]
+        
+#         # Thêm key 'avg' vào dict của ngày đó, hàm trung bình cộng
+#         report[date]["avg"] = round(total / count, 2)
+
+#     return report
+# print(daily_report(transactions))
+
+# 10. Quản lý phiên đăng nhập [DICT]
+
+import time
+
+class SessionStore:
+    def __init__(self, timeout=1800):
+        # Dictionary lưu trữ toàn bộ session
+        self.sessions = {}
+        # Thời gian sống mặc định của 1 session (tính bằng giây)
+        self.timeout = timeout
+
+    def create(self, user_id, data):
+        # Lấy mốc thời gian hiện tại (giây)
+        current_time = int(time.time())
+        
+        # Tạo bản ghi lưu vào dictionary
+        self.sessions[user_id] = {
+            "user_id": user_id,
+            "data": data,
+            "created_at": current_time,
+            "expires_at": current_time + self.timeout
         }
 
-    # 3. Xử lý Logic cốt lõi
-    discount_amount = 0
-    if coupon["type"] == "percent":
-        discount_amount = int(cart_total * (coupon["value"] / 100))
-    elif coupon["type"] == "fixed":
-        discount_amount = coupon["value"]
+    def get(self, user_id):
+        # 1. Kiểm tra xem user có trong hệ thống không
+        if user_id not in self.sessions:
+            return None
+        
+        # 2. Lấy session ra để kiểm tra
+        session = self.sessions[user_id]
+        current_time = int(time.time())
 
-    # 4. Bảo vệ an toàn: Không cho phép final_price bị âm
-    # đảm bảo nếu kết quả < 0 thì lấy số 0
-    final_price = cart_total - discount_amount
-    if final_price < 0:
-        final_price = 0
+        # 3. Kiểm tra hạn sử dụng (Lazy Expiration)
+        if current_time > session["expires_at"]:
+            # Đã quá hạn -> Xóa rác và báo không tìm thấy
+            self.delete(user_id)
+            return None
+        
+        # 4. Hợp lệ -> Trả về dữ liệu
+        return session
 
-    # 5. Trả về kết quả
-    return {
-        "valid": True,
-        "discount_amount": discount_amount,
-        "final_price": final_price,
-        "message": f"Áp dụng thành công {code} (-{coupon['value']}{'%' if coupon['type'] == 'percent' else 'đ'})"
-    }
-print(apply_coupon(cart_total=350000, code="SHIP50K", coupon_db=coupon_db))
+    def delete(self, user_id):
+        # Kiểm tra trước khi xóa để tránh lỗi KeyError
+        if user_id in self.sessions:
+            del self.sessions[user_id]
+
+
+if __name__ == "__main__":
+    #tạo vật thật store từ class(bản vẽ)
+    store = SessionStore(timeout=1800) # 30 phút
+    
+    # gọi hàm từ class ra
+    store.create("user_123", {"name": "An", "role": "customer"})
+    
+    # Lấy session
+    session = store.get("user_123")
+    print(session)
+    
+    # Xóa session
+    store.delete("user_123")
+    
+    # Lấy lại sau khi xóa
+    print(store.get("user_123"))
