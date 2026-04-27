@@ -253,64 +253,90 @@
 
 # 10. Quản lý phiên đăng nhập [DICT]
 
-import time
+# import time
 
-class SessionStore:
-    def __init__(self, timeout=1800):
-        # Dictionary lưu trữ toàn bộ session
-        self.sessions = {}
-        # Thời gian sống mặc định của 1 session (tính bằng giây)
-        self.timeout = timeout
+# class SessionStore:
+#     def __init__(self, timeout=1800):
+#         # Dictionary lưu trữ toàn bộ session
+#         self.sessions = {}
+#         # Thời gian sống mặc định của 1 session (tính bằng giây)
+#         self.timeout = timeout
 
-    def create(self, user_id, data):
-        # Lấy mốc thời gian hiện tại (giây)
-        current_time = int(time.time())
+#     def create(self, user_id, data):
+#         # Lấy mốc thời gian hiện tại (giây)
+#         current_time = int(time.time())
         
-        # Tạo bản ghi lưu vào dictionary
-        self.sessions[user_id] = {
-            "user_id": user_id,
-            "data": data,
-            "created_at": current_time,
-            "expires_at": current_time + self.timeout
-        }
+#         # Tạo bản ghi lưu vào dictionary
+#         self.sessions[user_id] = {
+#             "user_id": user_id,
+#             "data": data,
+#             "created_at": current_time,
+#             "expires_at": current_time + self.timeout
+#         }
 
-    def get(self, user_id):
-        # 1. Kiểm tra xem user có trong hệ thống không
-        if user_id not in self.sessions:
-            return None
+#     def get(self, user_id):
+#         # 1. Kiểm tra xem user có trong hệ thống không
+#         if user_id not in self.sessions:
+#             return None
         
-        # 2. Lấy session ra để kiểm tra
-        session = self.sessions[user_id]
-        current_time = int(time.time())
+#         # 2. Lấy session ra để kiểm tra
+#         session = self.sessions[user_id]
+#         current_time = int(time.time())
 
-        # 3. Kiểm tra hạn sử dụng (Lazy Expiration)
-        if current_time > session["expires_at"]:
-            # Đã quá hạn -> Xóa rác và báo không tìm thấy
-            self.delete(user_id)
-            return None
+#         # 3. Kiểm tra hạn sử dụng (Lazy Expiration)
+#         if current_time > session["expires_at"]:
+#             # Đã quá hạn -> Xóa rác và báo không tìm thấy
+#             self.delete(user_id)
+#             return None
         
-        # 4. Hợp lệ -> Trả về dữ liệu
-        return session
+#         # 4. Hợp lệ -> Trả về dữ liệu
+#         return session
 
-    def delete(self, user_id):
-        # Kiểm tra trước khi xóa để tránh lỗi KeyError
-        if user_id in self.sessions:
-            del self.sessions[user_id]
+#     def delete(self, user_id):
+#         # Kiểm tra trước khi xóa để tránh lỗi KeyError
+#         if user_id in self.sessions:
+#             del self.sessions[user_id]
 
 
-if __name__ == "__main__":
-    #tạo vật thật store từ class(bản vẽ)
-    store = SessionStore(timeout=1800) # 30 phút
+# if __name__ == "__main__":
+#     #tạo vật thật store từ class(bản vẽ)
+#     store = SessionStore(timeout=1800) # 30 phút
     
-    # gọi hàm từ class ra
-    store.create("user_123", {"name": "An", "role": "customer"})
+#     # gọi hàm từ class ra
+#     store.create("user_123", {"name": "An", "role": "customer"})
     
-    # Lấy session
-    session = store.get("user_123")
-    print(session)
+#     # Lấy session
+#     session = store.get("user_123")
+#     print(session)
     
-    # Xóa session
-    store.delete("user_123")
+#     # Xóa session
+#     store.delete("user_123")
     
-    # Lấy lại sau khi xóa
-    print(store.get("user_123"))
+#     # Lấy lại sau khi xóa
+#     print(store.get("user_123"))
+
+# 11. Hệ thống phân quyền RBAC [DICT]
+rbac = {
+"admin": {"products": ["read","create","update","delete"],
+
+"orders": ["read","update","delete"]},
+"seller": {"products": ["read","create","update"],
+
+"orders": ["read"]},
+
+"customer": {"orders": ["read","create"]},
+}
+
+def check_permission(role, resource, action, rbac):
+    return action in rbac.get(role, {}).get(resource, []) 
+    # Sử dụng phương thức get để truy cập vào role và resource,
+    # nếu role tồn tại sẽ trả về dict chứa resource, 
+    #dict resource sẽ trả về list quyền của resource đó.
+    # nếu không tồn tại sẽ trả về dict rỗng, tránh lỗi KeyError.
+    # Kiểm tra xem action có trong list quyền của resource đó hay không, 
+    # trả về True hoặc False.
+
+# Test cases
+print(check_permission("seller", "products", "delete", rbac)) # False
+print(check_permission("admin", "orders", "delete", rbac)) # True
+print(check_permission("customer", "products", "read", rbac)) # False
