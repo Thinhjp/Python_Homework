@@ -23,17 +23,18 @@ cart = [
 {"name": "Tất", "price": 25000, "quantity": 3},
 ]
 
-def cart_total(cart, discount=0.1):
+def cart_total(cart, discount):
     customer = []
     final_total = 0
     for pro in cart:
         cus = list(pro.values())
-        total = int (pro["price"] * pro["quantity"] * 0.9)
+        discount_cart = int((pro["price"] * pro["quantity"]) * discount /100)
+        total = (pro["price"] * pro["quantity"]) - discount_cart
         final_total += total
         customer.append(cus)
     return f"{customer} final price is: {final_total}"
 
-print(cart_total(cart), "VND")
+print(cart_total(cart,10), "VND")
     
 # 03. Gợi ý sản phẩm liên quan [LIST]
 
