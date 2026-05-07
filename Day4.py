@@ -116,51 +116,83 @@
 # print(validate_transaction_order(events1))
 # print(validate_transaction_order(events2))
 
-# 4. Hàng đợi ưu tiên giao hàng [QUEUE]
-# Shipping service ưu tiên đơn VIP và đơn Express trước đơn thường.
-# Viết class PriorityShippingQueue dùng heapq. Mức ưu tiên: express=1, vip=2, normal=3. Cùng mức thì
-# FIFO.
-# Gợi ý: Sử dụng “python priority queue”
+# # 4. Hàng đợi ưu tiên giao hàng [QUEUE]
+# # Shipping service ưu tiên đơn VIP và đơn Express trước đơn thường.
+# # Viết class PriorityShippingQueue dùng heapq. Mức ưu tiên: express=1, vip=2, normal=3. Cùng mức thì
+# # FIFO.
+# # Gợi ý: Sử dụng “python priority queue”
 
-import heapq # heapq là một module trong Python 
-# Mặc định heapq tạo ra một min-heap, vì vậy phần tử có mức ưu tiên cao nhất (priority thấp nhất) sẽ được xử lý trước.
+# import heapq # heapq là một module trong Python 
+# # Mặc định heapq tạo ra một min-heap, vì vậy phần tử có mức ưu tiên cao nhất (priority thấp nhất) sẽ được xử lý trước.
 
-class PriorityShippingQueue:
-    def __init__(self):
-        self.queue = [] # Sử dụng một list để lưu trữ các đơn hàng trong heap
-        self.counter = 0  # Đếm số lượng đơn hàng để đảm bảo FIFO
-        self.priority_map = {
-            "express": 1, 
-            "vip": 2, 
-            "normal": 3
-        } # Bản đồ để xác định mức ưu tiên của từng loại đơn hàng
-        # FIFO (First In, First Out) được thêm vào trước sẽ được xử lý trước nếu có cùng mức ưu tiên.
+# class PriorityShippingQueue:
+#     def __init__(self):
+#         self.queue = [] # Sử dụng một list để lưu trữ các đơn hàng trong heap
+#         self.counter = 0  # Đếm số lượng đơn hàng để đảm bảo FIFO
+#         self.priority_map = {
+#             "express": 1, 
+#             "vip": 2, 
+#             "normal": 3
+#         } # Bản đồ để xác định mức ưu tiên của từng loại đơn hàng
+#         # FIFO (First In, First Out) được thêm vào trước sẽ được xử lý trước nếu có cùng mức ưu tiên.
 
-    def enqueue(self, shipment: dict): 
-        # Enqueue nghĩa là thêm một phần tử vào hàng đợi. 
-        # shipment là một dictionary chứa thông tin về đơn hàng
-        priority = self.priority_map.get(shipment["type"], 3) 
-        # Lấy mức ưu tiên từ shipment, mặc định là 3 nếu không xác định được loại
-        heapq.heappush(self.queue, (priority, self.counter, shipment)) 
-        # heappush sẽ thêm phần tử vào heap. Heap so sánh từ trái sang phải của tuple.
-        # trong heap, giá trị nhỏ hơn sẽ đưa lên trước.
-        # thứ tự ưu tiên từ priority, = nhau thì so counter (ai vào trước)
-        self.counter += 1 
-        # Tăng counter sau mỗi lần thêm đơn hàng để đảm bảo FIFO
-    def dequeue(self): 
-        # Dequeue - ra khỏi hàng đợi.
-        if not self.queue:
-            return None  # Trả về None nếu hàng đợi rỗng
-        return heapq.heappop(self.queue)[2] 
-        # [2] là thứ tự trong chuỗi self.queue để lấy phần shipment từ tuple (priority, counter, shipment)
+#     def enqueue(self, shipment: dict): 
+#         # Enqueue nghĩa là thêm một phần tử vào hàng đợi. 
+#         # shipment là một dictionary chứa thông tin về đơn hàng
+#         priority = self.priority_map.get(shipment["type"], 3) 
+#         # Lấy mức ưu tiên từ shipment, mặc định là 3 nếu không xác định được loại
+#         heapq.heappush(self.queue, (priority, self.counter, shipment)) 
+#         # heappush sẽ thêm phần tử vào heap. Heap so sánh từ trái sang phải của tuple.
+#         # trong heap, giá trị nhỏ hơn sẽ đưa lên trước.
+#         # thứ tự ưu tiên từ priority, = nhau thì so counter (ai vào trước)
+#         self.counter += 1 
+#         # Tăng counter sau mỗi lần thêm đơn hàng để đảm bảo FIFO
+#     def dequeue(self): 
+#         # Dequeue - ra khỏi hàng đợi.
+#         if not self.queue:
+#             return None  # Trả về None nếu hàng đợi rỗng
+#         return heapq.heappop(self.queue)[2] 
+#         # [2] là thứ tự trong chuỗi self.queue để lấy phần shipment từ tuple (priority, counter, shipment)
         
 
-psq = PriorityShippingQueue()
-psq.enqueue({"id": "S1", "type": "normal", "dest": "HN"})
-psq.enqueue({"id": "S2", "type": "express", "dest": "HCM"})
-psq.enqueue({"id": "S3", "type": "vip", "dest": "DN"})
-psq.enqueue({"id": "S4", "type": "express", "dest": "HN"})
+# psq = PriorityShippingQueue()
+# psq.enqueue({"id": "S1", "type": "normal", "dest": "HN"})
+# psq.enqueue({"id": "S2", "type": "express", "dest": "HCM"})
+# psq.enqueue({"id": "S3", "type": "vip", "dest": "DN"})
+# psq.enqueue({"id": "S4", "type": "express", "dest": "HN"})
 
-print(psq.dequeue())
-print(psq.dequeue())
-print(psq.dequeue())
+# print(psq.dequeue())
+# print(psq.dequeue())
+# print(psq.dequeue())
+
+# 5. Mô phỏng hàng chờ thanh toán tại quầy [QUEUE]
+# POS system cần mô phỏng hàng chờ tại nhiều quầy thanh toán để tối ưu staffing.
+# Viết hàm simulate_checkout(customers, n_counters): khách xếp vào quầy ít người nhất, trả về thống kê
+# mỗi quầy xử lý bao nhiêu khách.
+
+customers = [
+{"id": "C1", "items": 5},
+{"id": "C2", "items": 12},
+{"id": "C3", "items": 3},
+{"id": "C4", "items": 8},
+{"id": "C5", "items": 1},
+]
+
+def simulate_checkout(customers, n_counters):
+    counters = {f"counter_{i+1}": {"customers": [], "total_items": 0} for i in range(n_counters)} 
+    # Tạo một dictionary để lưu trữ thông tin về mỗi quầy thanh toán, và vòng for tương ứng với n_counters
+    #bao gồm danh sách khách hàng và tổng số mặt hàng đã xử lý.
+
+    for customer in customers:
+        # Duyệt qua từng khách hàng trong danh sách customers
+        least_busy_counter = min(counters.keys(), key=lambda c: len(counters[c]["customers"])) 
+        # Tìm quầy có ít khách hàng nhất bằng cách sử dụng hàm min 
+        # với key là độ dài của danh sách khách hàng tại mỗi quầy.
+        counters[least_busy_counter]["customers"].append(customer["id"]) 
+        # Thêm ID của khách hàng vào danh sách khách hàng của quầy được chọn
+        counters[least_busy_counter]["total_items"] += customer["items"] 
+        # Cập nhật tổng số mặt hàng 
+    return counters 
+    # Trả về dictionary chứa thông tin về mỗi quầy sau khi đã phân bổ tất cả khách hàng
+
+print(simulate_checkout(customers, n_counters=2))
