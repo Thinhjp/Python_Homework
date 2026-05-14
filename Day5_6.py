@@ -1,16 +1,17 @@
-from decimal import Decimal
+from decimal import Decimal 
+# Sử dụng Decimal để xử lý giá tiền chính xác hơn, tránh lỗi làm tròn khi dùng float
 
 class Product:
     def __init__(self, product_id: int, name: str, price: float, quantity: int, category: str):
         # Kiểm tra dữ liệu đầu vào hợp lệ
         if price < 0 or quantity < 0: # Giá và số lượng không thể là số âm
-            raise ValueError("Giá và Số lượng tồn kho không được là số âm.")
+            raise ValueError("Giá và Số lượng tồn kho không được là số âm.") 
+        # raise là Control Flow Interruption (Ngắt luồng) báo lỗi ngay khi dữ liệu âm
+        
             
         self.product_id = product_id
         self.name = name
-        # Sử dụng Decimal để tránh lỗi làm tròn khi tính toán với float, 
-        # đặc biệt là khi áp dụng giảm giá
-        self.price = Decimal(str(price)) 
+        self.price = Decimal(str(price)) # Ép chuỗi rồi đưa cho Decimal tính
         self.quantity = quantity
         self.category = category
 
@@ -21,25 +22,26 @@ class Product:
             
         # Tính giá sau khi áp dụng giảm giá
         discount_amount = self.price * (Decimal(str(discount_percent)) / Decimal('100'))
+        # ép float discount_percent thành String rồi tính bằng Decimal
+        # '100' định nghĩa chuỗi thay cho str, không cần cũng được vì là số nguyên.
         discounted_price = self.price - discount_amount
-        
-        return float(discounted_price) # Ép lại float để dễ hiển thị nếu cần
+
+        return float(discounted_price) 
 
     def is_in_stock(self) -> bool:
         """
         Kiểm tra sản phẩm còn trong kho không.
-        """
+        """ 
+        # """ """ Docstring giải thích chức năng của hàm.
         return self.quantity > 0
 
-    # Hàm magic __str__ giúp in object ra console đẹp mắt, dễ debug
     def __str__(self):
+        """ Phiên dịch viên String để hiển thị thông tin sản phẩm một cách dễ đọc. """
         stock_status = "Còn hàng" if self.is_in_stock() else "Hết hàng"
         return f"[{self.product_id}] {self.name} - Giá: {self.price:,.0f}đ - Tình trạng: {stock_status}"
+        # f"" format chuỗi. :,.0f có dấu phẩy ngăn cách hàng nghìn và không thập phân.No float.
 
-
-# ==========================================
-# CHẠY THỬ VỚI 2-3 SẢN PHẨM KHÁC NHAU
-# ==========================================
+# Test case.
 
 if __name__ == "__main__":
     # 1. Khởi tạo sản phẩm
@@ -49,11 +51,11 @@ if __name__ == "__main__":
 
     products = [p1, p2, p3]
 
-    print("--- TRẠNG THÁI BAN ĐẦU ---")
+    print("--- LIST THUỘC TÍNH ---")
     for p in products:
         print(p)
 
-    print("\n--- KIỂM TRA LOGIC NGHIỆP VỤ ---")
+    print("\n--- TEST FUNCTION ---")
     
     # Kiểm tra tồn kho và áp dụng giảm giá
     for p in products:
