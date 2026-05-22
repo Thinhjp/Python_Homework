@@ -1,0 +1,1 @@
+<!-- Tư duy Kiến trúc sư (Architectural Thinking). Giữ vững nguyên tắc: Endpoint nhận lệnh -> Schema kiểm duyệt -> Core xử lý logic.  -->
