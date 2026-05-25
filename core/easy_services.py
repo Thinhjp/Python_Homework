@@ -52,9 +52,27 @@ def login(username, password):
     return log
 
 # Câu 7: Đếm số đơn theo trạng thái [Dễ]
-def count_status(statuses):
+def count_status(statuses: list) -> dict:
     counted_status = {}
     for status in statuses:
+        counted_status[status] = counted_status.get(status, 0) + 1
+    return counted_status
+    
+# Câu 8: Tìm sản phẩm theo id [Dễ]
+def find_product(products: list, product_id: str) -> dict | None:
+    for product in products:
+        if product.get("id") == product_id:
+            return product
+    return None
+
+# Câu 9: Lọc đơn hàng có giá trị cao [Dễ]
+def high_value_orders(orders: list, min_total: int) -> list:
+    result = [] #tạo list chứa kết quả sau lọc
+    for order in orders:
+        if order.get("total", 0) >= min_total:
+            result.append(order)
+    return result
+
         
 
 
