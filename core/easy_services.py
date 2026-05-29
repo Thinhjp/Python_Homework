@@ -73,7 +73,51 @@ def high_value_orders(orders: list, min_total: int) -> list:
             result.append(order)
     return result
 
-        
+# Câu 10: Kiểm tra số dư trước khi thanh toán [Dễ]
+def can_pay(balance: int, order_total:int) -> True:
+    check = False
+    if balance >= order_total:
+        check = True
+    return check
+
+# Câu 11: Cập nhật tồn kho sau khi bán [Dễ]
+def update_stock(stock: int, sold_quantity: int) -> int:
+    stock =- sold_quantity
+    return stock
+
+# Câu 12: Tính điểm tích lũy khách hàng [Dễ]
+def loyalty_points(order_total: int) -> int:
+    point = order_total // 10000
+    return point
+
+# Câu 13: Phân loại khách hàng theo tổng chi tiêu [Dễ] (Tạo API)
+def classify_customer(total_spent:int) -> str:
+    customer_class = "Normal"
+    if 1000000 <= total_spent < 5000000:
+        customer_class = "Silver"
+    elif total_spent >= 5000000:
+        customer_class = "Gold"
+ 
+# Câu 14: Kiểm tra email hợp lệ cơ bản [Dễ]
+def is_valid_email(email: str) -> True:
+    check = False
+    if "@" and ".com" in email:
+        check = True
+    return check
+
+# Câu 15: Lọc người dùng đang hoạt động [Dễ] (Tạo API)
+def active_users(users: list) -> list:
+    """
+    Lọc ra những user có trạng thái đang hoạt động.
+    """
+    # return [user for user in users if user.get("is_active")] - List Comprehension
+    active = []
+    for user in users:
+        if user.get("is_active"):
+            active.append(user)
+    return active 
+
+
 
 
         

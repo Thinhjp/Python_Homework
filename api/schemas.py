@@ -21,3 +21,13 @@ class CartItem(BaseModel):
 # Input cho Câu 4
 class OrderStatusInput(BaseModel):
     status: str
+
+# Input cho Câu 13
+class TotalSpentInput(BaseModel):
+    total_spent: int
+
+# Input cho Câu 15
+class UserInput(BaseModel):
+    id: int
+    name: str
+    is_active: bool
