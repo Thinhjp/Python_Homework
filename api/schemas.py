@@ -31,3 +31,23 @@ class UserInput(BaseModel):
     id: int
     name: str
     is_active: bool
+
+# Input cho câu 16
+class Order_IDInput(BaseModel):
+    id: int
+
+# Input cho câu 17
+class TransactionInput(BaseModel):
+    amount: int
+    status: str
+
+# Input cho câu 18
+class UserPasswordInput(BaseModel):
+    id: int
+    username: str
+    password: str
+
+# Input cho câu 19
+class OrderCodeInput(BaseModel):
+    order_id: int
+    
