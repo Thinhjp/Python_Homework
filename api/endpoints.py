@@ -5,8 +5,13 @@
 # schemas.py (Menu/Quy định): Ép kiểu dữ liệu trước khi truyền (Data Validation).
 from fastapi import APIRouter
 from typing import List
-from core.easy_services import filter_available, cart_total, order_message, classify_customer , active_users
-from api.schemas import ProductInput, CartItem, OrderStatusInput, TotalSpentInput, UserInput
+from core.easy_services import (filter_available, cart_total, order_message, 
+                                classify_customer , active_users , lastest_order, 
+                                daily_revenue, hide_password, order_code)
+
+from api.schemas import (ProductInput, CartItem, OrderStatusInput, TotalSpentInput,
+                        UserInput, Order_IDInput, TransactionInput, UserPasswordInput,
+                        OrderCodeInput)
 
 router = APIRouter()
 
@@ -57,3 +62,49 @@ def api_get_active_users(users: List[UserInput]):
     
     # Trả về kết quả
     return {"active_users": filtered_users}
+
+# API câu 16
+@router.post("/api/orders/ids")
+def api_get_lastest_order(orders: List[Order_IDInput]):
+    # Chuyển đổi dữ liệu Pydantic thành List of Dictionaries thuần
+    order_ids = [o.model_dump() for o in orders] # model_dump() là phương thức của Pydantic 
+    #để chuyển đổi một instance thành dictionary. 
+    # Nó sẽ lấy tất cả các trường dữ liệu đã định nghĩa trong model 
+    # và trả về một dict chứa các trường đó cùng với giá trị tương ứng. 
+    # Gọi hàm nghiệp vụ cốt lõi
+    last_order = lastest_order(order_ids)
+    # Trả về kết quả
+    return {"last_order_id": last_order}
+
+# API câu 17
+@router.post("/api/transactions/revenue")
+def api_daily_revenue(transactions: List[TransactionInput]):
+    # Chuyển đổi dữ liệu Pydantic thành List of Dictionaries thuần
+    transactions_dict = [t.model_dump() for t in transactions]
+    
+    # Gọi hàm nghiệp vụ cốt lõi
+    revenue = daily_revenue(transactions_dict)
+    
+    # Trả về kết quả
+    return {"daily_revenue": revenue}
+
+# API câu 18
+@router.post("/api/admin/users/hide-password")
+def api_hide_password(users: List[UserPasswordInput]):
+    # Chuyển đổi dữ liệu Pydantic thành List of Dictionaries thuần
+    users_dict = [u.model_dump() for u in users]
+    
+    # Gọi hàm nghiệp vụ cốt lõi
+    hidden_users = hide_password(users_dict)
+    
+    # Trả về kết quả
+    return {"users": hidden_users}
+
+# API câu 19
+@router.post("/api/orders/code")
+def api_order_code(payload: OrderCodeInput):
+    # Gọi hàm nghiệp vụ cốt lõi
+    code = order_code(payload.order_id)
+    
+    # Trả về kết quả
+    return {"order_code": code}
