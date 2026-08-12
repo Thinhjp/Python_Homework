@@ -8,3 +8,6 @@ app = FastAPI(title="50 Bài Tập Python Backend - Logic Nghiệp Vụ")
 
 # Gắn các route từ file endpoints vào app chính
 app.include_router(router)
+
+# uvicorn main:app --reload - chạy code
+# http://localhost:8000/docs - check api
